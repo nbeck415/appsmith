@@ -6,13 +6,14 @@ import {
 import _ from "lodash";
 import { EVALUATION_PATH } from "utils/DynamicBindingUtils";
 import { JSCollectionData } from "reducers/entityReducers/jsActionsReducer";
+import { ButtonGroupWidgetProps } from "widgets/ButtonGroupWidget/widget";
 
 const isVisible = {
   "!type": "bool",
   "!doc": "Boolean value indicating if the widget is in visible state",
 };
 
-export const entityDefinitions: Record<string, unknown> = {
+export const entityDefinitions = {
   APPSMITH: (entity: DataTreeAppsmith) => {
     const generatedTypeDef = generateTypeDef(
       _.omit(entity, "ENTITY_TYPE", EVALUATION_PATH),
@@ -122,6 +123,30 @@ export const entityDefinitions: Record<string, unknown> = {
       order: ["asc", "desc"],
     },
   }),
+  TABLE_WIDGET_V2: (widget: any) => ({
+    "!doc":
+      "The Table is the hero widget of Appsmith. You can display data from an API in a table, trigger an action when a user selects a row and even work with large paginated data sets",
+    "!url": "https://docs.appsmith.com/widget-reference/table",
+    selectedRow: generateTypeDef(widget.selectedRow),
+    selectedRows: generateTypeDef(widget.selectedRows),
+    selectedRowIndices: generateTypeDef(widget.selectedRowIndices),
+    triggeredRow: generateTypeDef(widget.triggeredRow),
+    updatedRow: generateTypeDef(widget.updatedRow),
+    selectedRowIndex: "number",
+    tableData: generateTypeDef(widget.tableData),
+    pageNo: "number",
+    pageSize: "number",
+    isVisible: isVisible,
+    searchText: "string",
+    totalRecordsCount: "number",
+    sortOrder: {
+      column: "string",
+      order: ["asc", "desc"],
+    },
+    updatedRows: generateTypeDef(widget.updatedRows),
+    updatedRowIndices: generateTypeDef(widget.updatedRowIndices),
+    triggeredRowIndex: generateTypeDef(widget.triggeredRowIndex),
+  }),
   VIDEO_WIDGET: {
     "!doc":
       "Video widget can be used for playing a variety of URLs, including file paths, YouTube, Facebook, Twitch, SoundCloud, Streamable, Vimeo, Wistia, Mixcloud, and DailyMotion.",
@@ -149,7 +174,7 @@ export const entityDefinitions: Record<string, unknown> = {
       "!url": "https://docs.appsmith.com/widget-reference/dropdown",
     },
     isDisabled: "bool",
-    options: "[dropdownOption]",
+    options: "[$__dropdownOption__$]",
   },
   SELECT_WIDGET: {
     "!doc":
@@ -171,7 +196,7 @@ export const entityDefinitions: Record<string, unknown> = {
       "!url": "https://docs.appsmith.com/widget-reference/dropdown",
     },
     isDisabled: "bool",
-    options: "[dropdownOption]",
+    options: "[$__dropdownOption__$]",
   },
   MULTI_SELECT_WIDGET: {
     "!doc":
@@ -193,7 +218,7 @@ export const entityDefinitions: Record<string, unknown> = {
       "!url": "https://docs.appsmith.com/widget-reference/dropdown",
     },
     isDisabled: "bool",
-    options: "[dropdownOption]",
+    options: "[$__dropdownOption__$]",
   },
   MULTI_SELECT_WIDGET_V2: {
     "!doc":
@@ -215,7 +240,7 @@ export const entityDefinitions: Record<string, unknown> = {
       "!url": "https://docs.appsmith.com/widget-reference/dropdown",
     },
     isDisabled: "bool",
-    options: "[dropdownOption]",
+    options: "[$__dropdownOption__$]",
   },
   IMAGE_WIDGET: {
     "!doc":
@@ -239,6 +264,14 @@ export const entityDefinitions: Record<string, unknown> = {
     text: "string",
     isDisabled: "bool",
     recaptchaToken: "string",
+  },
+  BUTTON_GROUP_WIDGET: (widget: ButtonGroupWidgetProps) => {
+    return {
+      "!doc":
+        "The Button group widget represents a set of buttons in a group. Group can have simple buttons or menu buttons with drop-down items.",
+      "!url": "https://docs.appsmith.com/widget-reference/button-group",
+      groupButtons: generateTypeDef(widget.groupButtons),
+    };
   },
   DATE_PICKER_WIDGET: {
     "!doc":
@@ -278,7 +311,7 @@ export const entityDefinitions: Record<string, unknown> = {
       "Radio widget lets the user choose only one option from a predefined set of options. It is quite similar to a SingleSelect Dropdown in its functionality",
     "!url": "https://docs.appsmith.com/widget-reference/radio",
     isVisible: isVisible,
-    options: "[dropdownOption]",
+    options: "[$__dropdownOption__$]",
     selectedOptionValue: "string",
     isRequired: "bool",
   },
@@ -300,10 +333,13 @@ export const entityDefinitions: Record<string, unknown> = {
       "Chart widget is used to view the graphical representation of your data. Chart is the go-to widget for your data visualisation needs.",
     "!url": "https://docs.appsmith.com/widget-reference/chart",
     isVisible: isVisible,
-    chartData: "chartData",
+    chartData: {
+      seriesName: "string",
+      data: "[$__chartDataPoint__$]",
+    },
     xAxisName: "string",
     yAxisName: "string",
-    selectedDataPoint: "chartDataPoint",
+    selectedDataPoint: "$__chartDataPoint__$",
   },
   FORM_WIDGET: (widget: any) => ({
     "!doc":
@@ -324,16 +360,25 @@ export const entityDefinitions: Record<string, unknown> = {
   },
   MAP_WIDGET: {
     isVisible: isVisible,
-    center: "latLong",
-    markers: "[mapMarker]",
-    selectedMarker: "mapMarker",
+    center: {
+      lat: "number",
+      long: "number",
+      title: "string",
+    },
+    markers: "[$__mapMarker__$]",
+    selectedMarker: {
+      lat: "number",
+      long: "number",
+      title: "string",
+      description: "string",
+    },
   },
   FILE_PICKER_WIDGET: {
     "!doc":
       "Filepicker widget is used to allow users to upload files from their local machines to any cloud storage via API. Cloudinary and Amazon S3 have simple APIs for cloud storage uploads",
     "!url": "https://docs.appsmith.com/widget-reference/filepicker",
     isVisible: isVisible,
-    files: "[file]",
+    files: "[$__file__$]",
     isDisabled: "bool",
   },
   FILE_PICKER_WIDGET_V2: {
@@ -341,7 +386,7 @@ export const entityDefinitions: Record<string, unknown> = {
       "Filepicker widget is used to allow users to upload files from their local machines to any cloud storage via API. Cloudinary and Amazon S3 have simple APIs for cloud storage uploads",
     "!url": "https://docs.appsmith.com/widget-reference/filepicker",
     isVisible: isVisible,
-    files: "[file]",
+    files: "[$__file__$]",
     isDisabled: "bool",
   },
   LIST_WIDGET: (widget: any) => ({
@@ -374,6 +419,7 @@ export const entityDefinitions: Record<string, unknown> = {
     source: "string",
     title: "string",
     message: generateTypeDef(widget.message),
+    messageMetadata: generateTypeDef(widget.messageMetadata),
   }),
   DIVIDER_WIDGET: {
     "!doc": "Divider is a simple UI widget used as a separator",
@@ -411,7 +457,7 @@ export const entityDefinitions: Record<string, unknown> = {
     },
     isDisabled: "bool",
     isValid: "bool",
-    options: "[dropdownOption]",
+    options: "[$__dropdownOption__$]",
   },
   MULTI_SELECT_TREE_WIDGET: {
     "!doc":
@@ -430,7 +476,7 @@ export const entityDefinitions: Record<string, unknown> = {
     },
     isDisabled: "bool",
     isValid: "bool",
-    options: "[dropdownOption]",
+    options: "[$__dropdownOption__$]",
   },
   ICON_BUTTON_WIDGET: {
     "!doc":
@@ -445,7 +491,7 @@ export const entityDefinitions: Record<string, unknown> = {
     isVisible: isVisible,
     isDisabled: "bool",
     isValid: "bool",
-    options: "[dropdownOption]",
+    options: "[$__dropdownOption__$]",
     selectedValues: "[string]",
   },
   STATBOX_WIDGET: {
@@ -490,7 +536,13 @@ export const entityDefinitions: Record<string, unknown> = {
       "Map Chart widget shows the graphical representation of your data on the map.",
     "!url": "https://docs.appsmith.com/widget-reference/map-chart",
     isVisible: isVisible,
-    selectedDataPoint: "mapChartDataPoint",
+    selectedDataPoint: {
+      id: "string",
+      label: "string",
+      originalId: "string",
+      shortLabel: "string",
+      value: "number",
+    },
   },
   INPUT_WIDGET_V2: {
     "!doc":
@@ -582,46 +634,31 @@ export const entityDefinitions: Record<string, unknown> = {
   },
 };
 
+/* 
+  $__name__$ is just to reduce occurrences of global def showing up in auto completion for user as `$` is less commonly used as entityName/
+
+  GLOBAL_DEFS are maintained to support definition for array of objects which currently aren't supported by our generateTypeDef.
+*/
 export const GLOBAL_DEFS = {
-  dropdownOption: {
+  $__dropdownOption__$: {
     label: "string",
     value: "string",
   },
-  tabs: {
-    id: "string",
-    label: "string",
-  },
-  chartDataPoint: {
+  $__chartDataPoint__$: {
     x: "string",
     y: "string",
   },
-  chartData: {
-    seriesName: "string",
-    data: "[chartDataPoint]",
-  },
-  latLong: {
-    lat: "number",
-    long: "number",
-    title: "string",
-  },
-  mapMarker: {
-    lat: "number",
-    long: "number",
-    title: "string",
-    description: "string",
-  },
-  file: {
+  $__file__$: {
     data: "string",
     dataFormat: "string",
     name: "text",
     type: "file",
   },
-  mapChartDataPoint: {
-    id: "string",
-    label: "string",
-    originalId: "string",
-    shortLabel: "string",
-    value: "number",
+  $__mapMarker__$: {
+    lat: "number",
+    long: "number",
+    title: "string",
+    description: "string",
   },
 };
 
@@ -695,3 +732,5 @@ export const getPropsForJSActionEntity = ({
   }
   return properties;
 };
+
+export type EntityDefinitionsOptions = keyof typeof entityDefinitions;

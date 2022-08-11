@@ -11,7 +11,6 @@ import AppPage from "./AppPage";
 import {
   getCanvasWidgetDsl,
   getCurrentPageName,
-  selectURLSlugs,
 } from "selectors/editorSelectors";
 import RequestConfirmationModal from "pages/Editor/RequestConfirmationModal";
 import { getCurrentApplication } from "selectors/applicationSelectors";
@@ -21,11 +20,9 @@ import {
 } from "../Applications/permissionHelpers";
 import { builderURL } from "RouteBuilder";
 
-const Section = styled.section<{
-  height: number;
-}>`
+const Section = styled.section`
   height: 100%;
-  min-height: ${({ height }) => height}px;
+  width: 100%;
   margin: 0 auto;
   position: relative;
   overflow-x: auto;
@@ -40,7 +37,6 @@ function AppViewerPageContainer(props: AppViewerPageContainerProps) {
   const isFetchingPage = useSelector(getIsFetchingPage);
   const currentApplication = useSelector(getCurrentApplication);
   const { match } = props;
-  const { applicationSlug, pageSlug } = useSelector(selectURLSlugs);
 
   // get appsmith editr link
   const appsmithEditorLink = useMemo(() => {
@@ -56,8 +52,6 @@ function AppViewerPageContainer(props: AppViewerPageContainerProps) {
           Please add widgets to this page in the&nbsp;
           <Link
             to={builderURL({
-              applicationSlug: applicationSlug,
-              pageSlug: pageSlug,
               pageId: props.match.params.pageId as string,
             })}
           >
@@ -95,7 +89,7 @@ function AppViewerPageContainer(props: AppViewerPageContainerProps) {
   if (!(widgets.children && widgets.children.length > 0)) return pageNotFound;
 
   return (
-    <Section height={widgets.bottomRow}>
+    <Section>
       <AppPage
         appName={currentApplication?.name}
         dsl={widgets}
